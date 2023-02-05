@@ -1,6 +1,5 @@
 const titulo_pagina = document.querySelector(".titulo");
-const pacientes = document.querySelectorAll(".paciente")
-const filtroPacientes = document.getElementById("filtra-tabela")!
+const filtroPacientes = document.getElementById("filtrar-tabela")
 const tabelaPacientes = document.getElementById("table")!;
 const botaoBuscarPaciente = document.querySelector("#buscar-pacientes");
 const botaoAdicionaPaciente = document.getElementById("adicionar-paciente")
@@ -43,21 +42,20 @@ filtroPacientes.addEventListener("input", () =>{
     if (value.length > 0){
         for (var i:number=0 ; i < pacientes.length; i++){
             var paciente = pacientes[i];
-            var tdNome = paciente.querySelector(".info-nome");
-            var nome = tdNome.textContent;
+            var nome = paciente.querySelector(".info-nome").textContent;
             var expressao = new RegExp(value,"i");
             if (!expressao.test(nome)){
-                paciente.classList.add("invisible")
+                paciente.classList.add("invisivel")
             }
             else{
-                paciente.classList.remove("invisible")
+                paciente.classList.remove("invisivel")
             }
         }
     }
     else{
         for (let index:number = 0; index < pacientes.length; index++) {
             var paciente = pacientes[index];
-            paciente.classList.remove("invisible")
+            paciente.classList.remove("invisivel")
             
         }
     }
