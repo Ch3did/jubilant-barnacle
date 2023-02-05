@@ -5,6 +5,8 @@ const tabelaPacientes = document.getElementById("table")!;
 const botaoBuscarPaciente = document.querySelector("#buscar-pacientes");
 const botaoAdicionaPaciente = document.getElementById("adicionar-paciente")
 
+import {PacienteController} from './controller/pacienteController.js'
+import { TableController } from './controller/tableController.js';
 
 
 titulo_pagina.textContent = "Aparecida Nutricionista";
@@ -17,7 +19,8 @@ botaoBuscarPaciente.addEventListener("click", function(event){
     xhr.addEventListener("load", function(){
         var responsta:string  = xhr.responseText;
         var paciente = JSON.parse(responsta)
-        adicionaPacienteNaTabela(paciente)
+        var tableController = new TableController()
+        tableController.adicionaPacienteNaTabela(paciente)
     })
     event.preventDefault();
 })
@@ -35,9 +38,8 @@ tabelaPacientes.addEventListener("dblclick", function(event){
 
 
 filtroPacientes.addEventListener("input", () =>{
-    var value = (filtro as HTMLInputElement).value;
+    var value = (filtroPacientes as HTMLInputElement).value;
     var pacientes = document.querySelectorAll(".paciente");
-    console.log(pacientes.length)
     if (value.length > 0){
         for (var i:number=0 ; i < pacientes.length; i++){
             var paciente = pacientes[i];
@@ -65,23 +67,16 @@ filtroPacientes.addEventListener("input", () =>{
 
 botaoAdicionaPaciente.addEventListener("click", function(event){
         event.preventDefault();
-        var form = document.querySelector("#form-adiciona");
-    
-        var paciente = obtemPacienteDoFormulario(form);
-    
-        var pacienteTr = montaTr(paciente);
-    
-        var erros = validaPaciente(paciente)
-    
-        if (erros.length > 0){
-            exibeMensagemDeErros(erros);
-            return;
-        }
+        var form: HTMLFormElement = document.querySelector("#form-adiciona");
         
-        var tabela = document.querySelector("#tabela-pacientes");
-        tabela.appendChild(pacienteTr);
-        form.reset();
-        var msg = document.querySelector("#mensagens-erro");
-        msg.textContent = ""
+        var paciente = new PacienteController(form).validaPaciente()
+        if (paciente){
+            var tableController = new TableController()
+            tableController.adicionaPacienteNaTabela(paciente)
+            form.reset();
+            
+            var msg = document.querySelector("#mensagens-erro");
+            msg.textContent = ""
+        }
+
     })
-})
